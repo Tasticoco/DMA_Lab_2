@@ -18,6 +18,7 @@ class BeaconsAdapter(_items : List<PersistentBeacon> = listOf())  :  RecyclerVie
             val diffItems = DiffUtil.calculateDiff(PersistentBeaconDiffCallback(items, sortedNewItems))
             field = sortedNewItems
             diffItems.dispatchUpdatesTo(this)
+
         }
 
     init {

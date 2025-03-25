@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import ch.heigvd.iict.dma.labo2.models.PersistentBeacon
+import org.altbeacon.beacon.Beacon
 
 
 class BeaconsViewModel : ViewModel() {
@@ -34,5 +35,13 @@ class BeaconsViewModel : ViewModel() {
 
     private val _closestBeacon = MutableLiveData<PersistentBeacon?>(null)
     val closestBeacon : LiveData<PersistentBeacon?> get() = _closestBeacon
+    
+    fun addNearby(beacon : PersistentBeacon){
+        _nearbyBeacons.value?.add(beacon)
+    }
+    
+    fun removeNearby(beacon : Beacon){
+        _nearbyBeacons.value?.remove(PersistentBeacon.fromBeacon(beacon))
+    }
 
 }

@@ -1,6 +1,7 @@
 package ch.heigvd.iict.dma.labo2.models
 
 import androidx.recyclerview.widget.DiffUtil
+import org.altbeacon.beacon.Beacon
 import java.util.*
 
 /*
@@ -17,8 +18,20 @@ data class PersistentBeacon(
 
     companion object {
         private var nextId = 0L
+
+        fun fromBeacon(beacon: Beacon) : PersistentBeacon{
+            return PersistentBeacon(
+                major = beacon.id2.toInt(),
+                minor = beacon.id3.toInt(),
+                uuid = beacon.id1.toUuid(),
+                rssi = beacon.rssi,
+                txPower = beacon.txPower,
+                distance = beacon.distance,
+            )
+        }
     }
 
+    
 }
 
 class PersistentBeaconDiffCallback(private val oldList : List<PersistentBeacon>,
@@ -43,3 +56,5 @@ class PersistentBeaconDiffCallback(private val oldList : List<PersistentBeacon>,
     }
 
 }
+
+

@@ -46,5 +46,6 @@ dependencies {
     implementation(libs.androidx.activity.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.lifecycle.livedata.ktx)
+    implementation("org.altbeacon:android-beacon-library:2.21.1")
 
 }
