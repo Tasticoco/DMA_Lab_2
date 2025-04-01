@@ -38,12 +38,14 @@ class MainActivity : AppCompatActivity() {
 
     val rangingObserver = Observer<Collection<Beacon>> { beacons ->
         Log.d("Beacon", "Ranged: ${beacons.count()} beacons")
+        
         beaconsViewModel.update(beacons.filter{ourBeaconsMinorId.contains(it.id3.toInt())})
-        for (beacon: Beacon in beacons) {
-            if(ourBeaconsMinorId.contains(beacon.id3.toInt())){
-                Log.d("Beacon", "$beacon about ${beacon.distance} meters away")
-            }
-        }
+
+        //for (beacon: Beacon in beacons) {
+        //    if(ourBeaconsMinorId.contains(beacon.id3.toInt())){
+        //        Log.d("Beacon", "$beacon about ${beacon.distance} meters away")
+        //    }
+        //}
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

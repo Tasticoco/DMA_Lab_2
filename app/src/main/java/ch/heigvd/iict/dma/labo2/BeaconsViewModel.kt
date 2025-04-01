@@ -36,7 +36,7 @@ class BeaconsViewModel : ViewModel() {
     private val _closestBeacon = MutableLiveData<PersistentBeacon?>(null)
     val closestBeacon : LiveData<PersistentBeacon?> get() = _closestBeacon
 
-    private val DELETE_TIMER = 5 * 1000 //20 seconds
+    private val DELETE_TIMER = 5 * 1000 //5 seconds
     
     private fun addNearby(beacon : PersistentBeacon){
         val currentList = _nearbyBeacons.value ?: mutableListOf()
@@ -53,9 +53,12 @@ class BeaconsViewModel : ViewModel() {
     fun update(rawBeacons : List<Beacon>) {
         val newBeacons = rawBeacons.map {PersistentBeacon.fromBeacon(it)}.toMutableList()
         val currentBeacons = _nearbyBeacons.value
+        val toDelete : MutableList<PersistentBeacon> = mutableListOf()
 
 
         if (currentBeacons != null) {
+
+            val time = System.currentTimeMillis()
 
             //Remove and update the old beacons
             for (beacon in currentBeacons) {
@@ -63,11 +66,16 @@ class BeaconsViewModel : ViewModel() {
                 if (existBeacon != null){ //update the beacon
                     beacon.txPower = existBeacon.txPower
                     beacon.distance = existBeacon.distance
-                    beacon.lastSeenTime = System.currentTimeMillis()
+                    beacon.lastSeenTime = time
                     newBeacons.remove(existBeacon)
-                }else if (beacon.lastSeenTime >= DELETE_TIMER){
-                    currentBeacons.remove(beacon)
+                }else if (time - beacon.lastSeenTime > DELETE_TIMER){
+                    toDelete.add(beacon)
                 }
+            }
+
+            //Delete the beacons
+            for (b in toDelete) {
+                currentBeacons.remove(b)
             }
 
             //Add the new beacons
@@ -82,12 +90,14 @@ class BeaconsViewModel : ViewModel() {
             _nearbyBeacons.value = newBeacons.toMutableList()
         }
 
+        // Updathe closest beacon
+        updateClosest()
+
     }
 
-    /*fun findClosest() : PersistentBeacon {
-        //nearbyBeacons.value().
+    private fun updateClosest() {
+        _closestBeacon.value = nearbyBeacons.value?.minBy {it.distance}
     }
 
-     */
 
 }
