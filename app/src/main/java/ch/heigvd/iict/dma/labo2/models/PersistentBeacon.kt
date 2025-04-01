@@ -1,7 +1,10 @@
 package ch.heigvd.iict.dma.labo2.models
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.DiffUtil
 import org.altbeacon.beacon.Beacon
+import java.time.Instant
 import java.util.*
 
 /*
@@ -12,9 +15,10 @@ data class PersistentBeacon(
     var major: Int,
     var minor: Int,
     var uuid: UUID,
-    var rssi : Int, 
+    var rssi : Int,
     var txPower : Int,
-    var distance : Double) {
+    var distance : Double,
+    var lastSeenTime : Long) {
 
     companion object {
         private var nextId = 0L
@@ -27,6 +31,7 @@ data class PersistentBeacon(
                 rssi = beacon.rssi,
                 txPower = beacon.txPower,
                 distance = beacon.distance,
+                lastSeenTime = System.currentTimeMillis()
             )
         }
     }
