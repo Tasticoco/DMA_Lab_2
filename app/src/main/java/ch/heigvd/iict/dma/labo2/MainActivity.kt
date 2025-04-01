@@ -34,15 +34,14 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var beaconManager: BeaconManager
 
-    private var ourBeacons = intArrayOf(45,65)
+    private var ourBeaconsMinorId = intArrayOf(45,65)
 
     val rangingObserver = Observer<Collection<Beacon>> { beacons ->
         Log.d("Beacon", "Ranged: ${beacons.count()} beacons")
         for (beacon: Beacon in beacons) {
-            if(ourBeacons.contains(beacon.id3.toInt())){
+            if(ourBeaconsMinorId.contains(beacon.id3.toInt())){
                 Log.d("Beacon", "$beacon about ${beacon.distance} meters away")
-                var list = beaconsViewModel.nearbyBeacons.value
-                //list.add(PersistentBeacon.fromBeacon(beacon))
+                beaconsViewModel.update(beacon)
             }
         }
     }

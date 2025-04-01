@@ -12,7 +12,7 @@ data class PersistentBeacon(
     var major: Int,
     var minor: Int,
     var uuid: UUID,
-    var rssi : Int,
+    var rssi : Int, 
     var txPower : Int,
     var distance : Double) {
 

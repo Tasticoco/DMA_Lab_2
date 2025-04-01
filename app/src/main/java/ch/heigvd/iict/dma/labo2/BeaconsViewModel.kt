@@ -36,12 +36,35 @@ class BeaconsViewModel : ViewModel() {
     private val _closestBeacon = MutableLiveData<PersistentBeacon?>(null)
     val closestBeacon : LiveData<PersistentBeacon?> get() = _closestBeacon
     
-    fun addNearby(beacon : PersistentBeacon){
-        _nearbyBeacons.value?.add(beacon)
+    private fun addNearby(beacon : PersistentBeacon){
+        val currentList = _nearbyBeacons.value ?: mutableListOf()
+        currentList.add(beacon)
+        _nearbyBeacons.value = currentList
     }
     
-    fun removeNearby(beacon : Beacon){
-        _nearbyBeacons.value?.remove(PersistentBeacon.fromBeacon(beacon))
+    private fun removeNearby(beacon : PersistentBeacon){
+        val currentList = _nearbyBeacons.value ?: return
+        currentList.remove(beacon)
+        _nearbyBeacons.value = currentList
+    }
+
+    fun update(rawBeacon: Beacon) {
+        val beacon = PersistentBeacon.fromBeacon(rawBeacon)
+
+        val list = _nearbyBeacons.value
+        if (list != null) {
+            val existingBeacon = list.find { b -> b.minor == beacon.minor }
+            if (existingBeacon != null) {
+                // Update existing beacon
+                existingBeacon.distance = beacon.distance
+                existingBeacon.txPower = beacon.txPower
+                _nearbyBeacons.value = list
+            } else {
+                addNearby(beacon)
+            }
+        } else {
+            _nearbyBeacons.value = mutableListOf(beacon)
+        }
     }
 
 }
