@@ -35,8 +35,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var beaconManager: BeaconManager
 
     private val ourBeaconsMinorId = mapOf(
-        Pair(45,R.string.office_beacon_name.toString()),
-        Pair(65,R.string.kitchen_beacon_name.toString())
+        Pair(45,getString(R.string.office_beacon_name)),
+        Pair(65,getString(R.string.kitchen_beacon_name))
     )
 
     val rangingObserver = Observer<Collection<Beacon>> { beacons ->
