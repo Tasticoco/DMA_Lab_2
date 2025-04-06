@@ -34,19 +34,13 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var beaconManager: BeaconManager
 
-    // private val ourBeaconsMinorId = intArrayOf(45,65)
-     private val ourBeaconsMinorId = mapOf(Pair(45,"Bureau"), Pair(65,"Cuisine"))
+    private val ourBeaconsMinorId = mapOf(
+        Pair(45,R.string.office_beacon_name.toString()),
+        Pair(65,R.string.kitchen_beacon_name.toString())
+    )
 
     val rangingObserver = Observer<Collection<Beacon>> { beacons ->
-        Log.d("Beacon", "Ranged: ${beacons.count()} beacons")
-        
         beaconsViewModel.update(beacons.filter{ourBeaconsMinorId.containsKey(it.id3.toInt())})
-
-        //for (beacon: Beacon in beacons) {
-        //    if(ourBeaconsMinorId.contains(beacon.id3.toInt())){
-        //        Log.d("Beacon", "$beacon about ${beacon.distance} meters away")
-        //    }
-        //}
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -96,8 +90,6 @@ class MainActivity : AppCompatActivity() {
         beaconManager.getRegionViewModel(region).rangedBeacons.observe(this, rangingObserver)
         beaconManager.startRangingBeacons(region)
 
-        // notifier
-
 
         // init views
         val beaconAdapter = BeaconsAdapter()
@@ -107,7 +99,8 @@ class MainActivity : AppCompatActivity() {
         // update views
         beaconsViewModel.closestBeacon.observe(this) {b ->
             if(b != null) {
-                binding.location.text = "${b.major} - ${b.minor} (${String.format("%.2f", b.distance)} m) \n ${ourBeaconsMinorId[b.minor]}"
+                // "${b.major} - ${b.minor} (${String.format("%.2f", b.distance)} m) \n ${ourBeaconsMinorId[b.minor]}"
+                binding.location.text = getString(R.string.location_text, b.major, b.minor, b.distance, ourBeaconsMinorId[b.minor])
             } else {
                 binding.location.text = getString(R.string.no_beacons)
             }
