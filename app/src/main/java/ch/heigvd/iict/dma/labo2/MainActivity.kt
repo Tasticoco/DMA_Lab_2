@@ -34,19 +34,19 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var beaconManager: BeaconManager
 
-    private val ourBeaconsMinorId = mapOf(
-        Pair(45,getString(R.string.office_beacon_name)),
-        Pair(65,getString(R.string.kitchen_beacon_name))
-    )
-
-    val rangingObserver = Observer<Collection<Beacon>> { beacons ->
-        beaconsViewModel.update(beacons.filter{ourBeaconsMinorId.containsKey(it.id3.toInt())})
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val ourBeaconsMinorId = mapOf(
+            Pair(45,getString(R.string.office_beacon_name)),
+            Pair(65,getString(R.string.kitchen_beacon_name))
+        )
+
+        val rangingObserver = Observer<Collection<Beacon>> { beacons ->
+            beaconsViewModel.update(beacons.filter{ourBeaconsMinorId.containsKey(it.id3.toInt())})
+        }
 
         // check if bluetooth is enabled
         val bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
